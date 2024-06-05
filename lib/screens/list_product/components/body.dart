@@ -59,8 +59,8 @@ class _BodyState extends State<Body> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              content: Text(
-                                  'Do you want to delete item ${listProductViewModel.getDetail(index).name}'),
+                              content: const Text(
+                                  'Do you want to delete item '),
                               actions: <Widget>[
                                 TextButton(
                                   onPressed: () =>

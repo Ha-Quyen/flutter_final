@@ -1,34 +1,35 @@
-import 'package:uuid/uuid.dart';
-
 class Product {
-  final String id = const Uuid().v4();
+  late String id;
   late String name;
   late String description;
   late String image;
   late double price;
+  late bool isStar;
 
   Product({
+    required this.id,
     required this.name,
     required this.description,
     required this.image,
     required this.price,
+    required this.isStar,
   });
-}
 
-final List<Product> listProduct = [
-  Product(
-      name: 'Product 1',
-      description: 'Description of product 1',
-      image: 'https://picsum.photos/id/0/5000/3333',
-      price: 150.0),
-  Product(
-      name: 'Product 2',
-      description: 'Description of product 2',
-      image: 'https://picsum.photos/id/1/5000/3333',
-      price: 150.0),
-  Product(
-      name: 'Product 3',
-      description: 'Description of product 3',
-      image: 'https://picsum.photos/id/2/5000/3333',
-      price: 150.0),
-];
+  factory Product.fromJson(Map<String, dynamic> json) => Product(
+        id: json["id"],
+        name: json["name"],
+        description: json["description"],
+        image: json["image"],
+        price: json["price"],
+        isStar: json["isStar"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "description": description,
+        "image": image,
+        "price": price,
+        "isStar": isStar,
+    };
+}

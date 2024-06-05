@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Constants {
+  static String LocalData = "MyData";
   // color
   static Color kPrimaryColor = const Color(0xFFFF7643);
   static Color kPrimaryLightColor = const Color(0xFFFFECDF);
