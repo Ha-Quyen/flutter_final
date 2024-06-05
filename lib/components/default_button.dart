@@ -30,7 +30,7 @@ class DefaultButton extends StatelessWidget {
       height: SizeConfig.getProportionateScreenWidth(height),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(radius ?? 0.0)),
-        color: backgroundColor ?? Color(0x000000),
+        color: backgroundColor ?? const Color(0x00000000),
       ),
       child: TextButton(
         onPressed: press,
@@ -38,7 +38,7 @@ class DefaultButton extends StatelessWidget {
           text,
           style: TextStyle(
               fontSize: SizeConfig.getProportionateScreenWidth(textSize ?? 20),
-              color: textColor ?? Color(0xFFFFFF)),
+              color: textColor ?? const Color(0x00ffffff)),
         ),
       ),
     );

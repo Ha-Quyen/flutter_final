@@ -7,8 +7,7 @@ class ProductCard extends StatefulWidget {
   const ProductCard({super.key, required this.product});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _ProductCardState createState() => _ProductCardState();
+  State<ProductCard> createState() => _ProductCardState();
 }
 
 class _ProductCardState extends State<ProductCard> {
