@@ -1,6 +1,6 @@
-
 import 'dart:convert';
 
+import 'package:flutter_final/configs/constants.dart';
 import 'package:flutter_final/model/product.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
@@ -8,20 +8,23 @@ import 'package:uuid/uuid.dart';
 class ListProductViewModel {
   ListProductViewModel();
 
-  List<Product> listProduct = List.empty(growable: true);
-  List<Product> listSearchData = List.empty(growable: true);
+  List<Product> listProduct = [];
+  List<Product> listSearchData = [];
 
   late SharedPreferences sp;
 
   loadData() async {
     sp = await SharedPreferences.getInstance();
     // Lấy data dưới dạng string
-    List<String>? dataStr = sp.getStringList('myData');
+    List<String>? dataStr = sp.getStringList(Constants.LocalData);
 
     if (dataStr != null) {
       listProduct = dataStr
           .map((contact) => Product.fromJson(json.decode(contact)))
           .toList();
+
+      print(dataStr);
+      print(listProduct);
     }
   }
 
@@ -37,14 +40,4 @@ class ListProductViewModel {
     }
     return Future.value(listSearchData);
   }
-
-  // saveData() {
-  //   Product p = Product(id: const Uuid().v4(), name: "112", description: "22222", image: "image", price: 124, isStar: false);
-
-  //   listProduct.add(p);
-
-  //   List<String> dataStr =
-  //       listProduct.map((contact) => jsonEncode(contact.toJson())).toList();
-  //   sp.setStringList('myData', dataStr);
-  // }
 }

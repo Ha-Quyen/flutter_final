@@ -6,30 +6,16 @@ import 'package:flutter_final/screens/list_product/view_model/list_product_view_
 import 'package:uuid/uuid.dart';
 
 class Body extends StatefulWidget {
-  const Body({super.key});
+  Body({super.key, required this.listProductViewModel});
+
+  late ListProductViewModel listProductViewModel;
 
   @override
   State<Body> createState() => _BodyState();
 }
 
 class _BodyState extends State<Body> {
-  ListProductViewModel listProductViewModel = ListProductViewModel();
   late String searchText = "";
-
-  void loadData() {
-    Future.delayed(const Duration(milliseconds: 100), () {
-      setState(() {
-        listProductViewModel.loadData();
-        FocusScope.of(context).unfocus();
-      });
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    loadData();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +31,7 @@ class _BodyState extends State<Body> {
             });
           }),
           FutureBuilder<List<Product>>(
-            future: listProductViewModel.fetchData(searchText),
+            future: widget.listProductViewModel.fetchData(searchText),
             builder: (_, snapshot) {
               return Expanded(
                 child: ListView.builder(
@@ -59,8 +45,8 @@ class _BodyState extends State<Body> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              content: const Text(
-                                  'Do you want to delete item '),
+                              content:
+                                  const Text('Do you want to delete item '),
                               actions: <Widget>[
                                 TextButton(
                                   onPressed: () =>
