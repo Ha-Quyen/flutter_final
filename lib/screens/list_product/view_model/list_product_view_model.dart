@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter_final/configs/constants.dart';
 import 'package:flutter_final/model/product.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/uuid.dart';
 
 class ListProductViewModel {
   ListProductViewModel();
@@ -22,9 +21,6 @@ class ListProductViewModel {
       listProduct = dataStr
           .map((contact) => Product.fromJson(json.decode(contact)))
           .toList();
-
-      print(dataStr);
-      print(listProduct);
     }
   }
 
@@ -39,5 +35,29 @@ class ListProductViewModel {
           .toList();
     }
     return Future.value(listSearchData);
+  }
+
+  Product getDetail(int index) {
+    return listSearchData[index];
+  }
+
+  void updateData(Product product) {
+    // Tìm vị trí phần tử trong danh sách
+    int index = listProduct.map((p) => p.id).toList().indexOf(product.id);
+    listProduct[index] = product;
+
+    List<String> dataStr =
+        listProduct.map((contact) => jsonEncode(contact.toJson())).toList();
+    sp.setStringList(Constants.LocalData, dataStr);
+  }
+
+  void deleteData(Product product) {
+    // Tìm vị trí phần tử trong danh sách
+    int index = listProduct.map((p) => p.id).toList().indexOf(product.id);
+    listProduct.removeAt(index);
+
+    List<String> dataStr =
+        listProduct.map((contact) => jsonEncode(contact.toJson())).toList();
+    sp.setStringList(Constants.LocalData, dataStr);
   }
 }

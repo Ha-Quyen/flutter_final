@@ -4,18 +4,11 @@ import 'dart:convert';
 import 'package:flutter_final/configs/constants.dart';
 import 'package:flutter_final/model/product.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/uuid.dart';
 
-class AddProductViewModel {
-  AddProductViewModel();
+class EditProductViewModel {
+  EditProductViewModel();
 
-  late Product previewData = Product(
-      id: const Uuid().v4(),
-      name: "",
-      description: "",
-      image: "",
-      price: 0.0,
-      isStar: false);
+  late Product previewData;
 
   List<Product> listProduct = List.empty(growable: true);
 
@@ -62,8 +55,10 @@ class AddProductViewModel {
     previewData.price = price;
   }
 
-  void insertData() {
-    listProduct.insert(0, previewData);
+  void updateData() {
+    // Tìm vị trí phần tử trong danh sách
+    int index = listProduct.map((p) => p.id).toList().indexOf(previewData.id);
+    listProduct[index] = previewData;
 
     List<String> dataStr =
         listProduct.map((contact) => jsonEncode(contact.toJson())).toList();

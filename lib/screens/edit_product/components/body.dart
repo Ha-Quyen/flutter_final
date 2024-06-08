@@ -4,11 +4,15 @@ import 'package:flutter_final/components/input_from.dart';
 import 'package:flutter_final/components/product_card.dart';
 import 'package:flutter_final/configs/size_config.dart';
 import 'package:flutter_final/model/product.dart';
-import 'package:flutter_final/screens/add_product/view_model/add_product_view_model.dart';
+import 'package:flutter_final/screens/edit_product/view_model/edit_product_view_model.dart';
 import 'package:status_alert/status_alert.dart';
 
 class Body extends StatefulWidget {
-  const Body({super.key});
+  final Product product;
+  const Body({
+    super.key,
+    required this.product,
+  });
 
   @override
   // ignore: library_private_types_in_public_api
@@ -16,12 +20,12 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  var addProductViewModel = AddProductViewModel();
+  var editProductViewModel = EditProductViewModel();
 
   void loadData() {
     Future.delayed(const Duration(milliseconds: 100), () {
       setState(() {
-        addProductViewModel.loadData();
+        editProductViewModel.loadData();
         FocusScope.of(context).unfocus();
       });
     });
@@ -31,6 +35,7 @@ class _BodyState extends State<Body> {
   void initState() {
     super.initState();
     loadData();
+    editProductViewModel.previewData = widget.product;
   }
 
   @override
@@ -51,37 +56,41 @@ class _BodyState extends State<Body> {
               children: [
                 InputFrom(
                   type: "Image URL",
+                  initText: editProductViewModel.previewData.image,
                   onChanged: (value) {
                     setState(() {
-                      addProductViewModel.updateImage(value);
+                      editProductViewModel.updateImage(value);
                     });
                   },
                 ),
                 const SizedBox(height: 12),
                 InputFrom(
                   type: "Product Name",
+                  initText: editProductViewModel.previewData.name,
                   onChanged: (value) {
                     setState(() {
-                      addProductViewModel.updateName(value);
+                      editProductViewModel.updateName(value);
                     });
                   },
                 ),
                 const SizedBox(height: 12),
                 InputFrom(
                   type: "Description",
+                  initText: editProductViewModel.previewData.description,
                   onChanged: (value) {
                     setState(() {
-                      addProductViewModel.updateDescription(value);
+                      editProductViewModel.updateDescription(value);
                     });
                   },
                 ),
                 const SizedBox(height: 12),
                 InputFrom(
                   type: "Price",
+                  initText: editProductViewModel.previewData.price.toString(),
                   keyboard: TextInputType.number,
                   onChanged: (value) {
                     setState(() {
-                      addProductViewModel.updatePrice(
+                      editProductViewModel.updatePrice(
                           value.isEmpty ? 0.0 : double.parse(value));
                     });
                   },
@@ -95,24 +104,25 @@ class _BodyState extends State<Body> {
                   ),
                 ),
                 FutureBuilder<Product>(
-                  future: addProductViewModel.fetchData(),
+                  future: editProductViewModel.fetchData(),
                   builder: (_, snapshot) {
                     return ProductCard(
                       showOption: false,
                       product: snapshot.data ??
                           Product(
-                              id: "",
-                              name: "",
-                              description: "",
-                              image: "",
-                              price: 0.0,
-                              isStar: false),
+                            id: "",
+                            name: "",
+                            description: "",
+                            image: "",
+                            price: 0.0,
+                            isStar: false,
+                          ),
                     );
                   },
                 ),
                 const SizedBox(height: 25),
                 FutureBuilder<bool>(
-                  future: addProductViewModel.checkAction(),
+                  future: editProductViewModel.checkAction(),
                   builder: (_, snapshot) {
                     return DefaultButton(
                       width: double.infinity,
@@ -129,7 +139,7 @@ class _BodyState extends State<Body> {
                           StatusAlert.show(
                             context,
                             duration: const Duration(seconds: 2),
-                            subtitle: 'Add Success',
+                            subtitle: 'Edit Success',
                             configuration:
                                 const IconConfiguration(icon: Icons.done),
                             maxWidth: 260,
@@ -138,7 +148,7 @@ class _BodyState extends State<Body> {
                           Future.delayed(const Duration(milliseconds: 2000),
                               () {
                             setState(() {
-                              addProductViewModel.insertData();
+                              editProductViewModel.updateData();
                             });
                             // ignore: use_build_context_synchronously
                             Navigator.pop(context, "Updated Data");

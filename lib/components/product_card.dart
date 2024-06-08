@@ -3,15 +3,30 @@ import 'package:flutter_final/model/product.dart';
 
 class ProductCard extends StatefulWidget {
   final Product product;
+  final bool showOption;
+  final ValueChanged<Product>? onTapDelete;
+  final ValueChanged<Product>? onTapStar;
 
-  const ProductCard({super.key, required this.product});
+  const ProductCard({
+    super.key,
+    required this.product,
+    this.showOption = true,
+    this.onTapDelete,
+    this.onTapStar,
+  });
 
   @override
   State<ProductCard> createState() => _ProductCardState();
 }
 
 class _ProductCardState extends State<ProductCard> {
-  final bool _isHovering = false;
+  late bool isStar = false;
+
+  @override
+  void initState() {
+    super.initState();
+    isStar = widget.product.isStar;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +34,11 @@ class _ProductCardState extends State<ProductCard> {
       height: 120, // Adjust height as needed
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: _isHovering ? Colors.grey[200] : Colors.white,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: _isHovering
-                ? Colors.grey.withOpacity(0.8)
-                : Colors.grey.withOpacity(0.5),
+            color: Colors.grey.withOpacity(0.5),
             spreadRadius: 2,
             blurRadius: 5,
             offset: const Offset(0, 3), // changes position of shadow
@@ -78,6 +91,54 @@ class _ProductCardState extends State<ProductCard> {
               ],
             ),
           ),
+
+          if (widget.showOption)
+            SizedBox(
+              width: 40,
+              height: 120,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      if (widget.onTapDelete != null) {
+                        widget.onTapDelete!(widget.product);
+                      }
+                    },
+                    child: const Icon(
+                      size: 30,
+                      color: Colors.red,
+                      Icons.delete_outline,
+                    ),
+                  ),
+                  const Spacer(),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isStar = !isStar;
+                        widget.product.isStar = isStar;
+                      });
+
+                      if (widget.onTapStar != null) {
+                        widget.onTapStar!(widget.product);
+                      }
+                    },
+                    child: Icon(
+                      size: 30,
+                      color: isStar ? Colors.yellow : Colors.grey,
+                      isStar ? Icons.star : Icons.star_outline,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                ],
+              ),
+            ),
         ],
       ),
     );
